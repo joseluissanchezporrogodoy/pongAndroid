@@ -217,7 +217,7 @@ public class PongView extends View implements View.OnTouchListener{
        // bola.velocidad = bola.velocidad ;//añadir velocidad
         bola.randomAngle();
         bola.pause();
-      
+
     }
 
     //Reproducir Sonidos
