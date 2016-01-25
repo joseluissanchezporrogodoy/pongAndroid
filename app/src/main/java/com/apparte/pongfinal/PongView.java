@@ -25,6 +25,9 @@ public class PongView extends View implements View.OnTouchListener{
     Paint bolaPincel;
     Ball bola;
     boolean nuevaBola =false;
+    boolean continuar=true;
+    private Rect reiniciarBoton;
+    boolean reiniciar;
     /** Pool for our sound effects */
     protected SoundPool mPool = new SoundPool(3, AudioManager.STREAM_MUSIC, 0);
 
@@ -55,7 +58,12 @@ public class PongView extends View implements View.OnTouchListener{
             this.sendMessageDelayed(obtainMessage(0), delay);
         }
     }
-
+    public void iniciarBotonNuevoJuego(){
+        int min = Math.min(getWidth() / 4, getHeight() / 4);
+        int xmid = getWidth() / 2;
+        int ymid = getHeight() / 2;
+        reiniciarBoton = new Rect(xmid - min, ymid - min, xmid + min, ymid + min);
+    }
     public void update(){
         if(getHeight() == 0 || getWidth() == 0) {
             mRedrawHandler.sleep(1000 / 30);
@@ -63,6 +71,7 @@ public class PongView extends View implements View.OnTouchListener{
         }
         if(!juegoIniciado){
             inicializarJuego();
+
         }
         long now = System.currentTimeMillis();
         if(juegoIniciado) {
@@ -74,13 +83,24 @@ public class PongView extends View implements View.OnTouchListener{
                 logicaDeJuego();
             }
         }
-        if(true) {
+        if(continuar) {
             long diff = System.currentTimeMillis() - now;
             mRedrawHandler.sleep(Math.max(0, (1000 / 30) - diff) );
         }
 
     }
+    public void  nuevoJuego(){
+        juegoIniciado=false;
+        continuar = true;
+    }
+    public void resume() {
+        continuar = true;
+        update();
+    }
 
+    public void stop() {
+        continuar = false;
+    }
     public void logicaDeJuego(){
         //Mover jugadores
         float px = bola.x;
@@ -96,16 +116,26 @@ public class PongView extends View implements View.OnTouchListener{
 
             if(!jugadorRojo.haGanado())
                 playSound(bolaPerdidaSFX);
-            else
+            else{
                 playSound(ganarSFX);
+                stop();
+                //Nuevo juego
+                //nuevoJuego();
+            }
+
         }
         else if (bola.y <= 0) {
             nuevaBola = true;
             jugadorzul.marcaGol();
             if(!jugadorzul.haGanado())
                 playSound(bolaPerdidaSFX);
-            else
+            else{
                 playSound(ganarSFX);
+                stop();
+                //Nuevo juego
+                //nuevoJuego();
+            }
+
         }
 
     }
@@ -145,6 +175,7 @@ public class PongView extends View implements View.OnTouchListener{
             playSound(toqueRaquetaSFX);
 
         }
+
     }
 
     protected void handleBottomFastBounce(Player jugador, float px, float py) {
@@ -173,17 +204,48 @@ public class PongView extends View implements View.OnTouchListener{
         super.onDraw(canvas);
 
         //Pinto jugadores
-        jugadorzul.draw(canvas);
-        jugadorRojo.draw(canvas);
-        bola.draw(canvas);
+        if(continuar) {
+            jugadorzul.draw(canvas);
+            jugadorRojo.draw(canvas);
+            bola.draw(canvas);
+        }else{
+
+            pintaReiniciarJuego(canvas);
+        }
 
     }
+    private void pintaReiniciarJuego(Canvas canvas){
+        reiniciar=true;
+        Paint paint= new Paint();
+        paint.setColor(Color.GREEN);
+        String gana;
+        if(jugadorzul.haGanado()){
+            gana ="Gana el azul";
+        }else{
+            gana ="Gana el rojo";
+        }
+        String texto = "Juego terminado \n"+gana+"\n"+"Pulse para reiniciar";
+        int pausew = (int) paint.measureText(texto);
+        paint.setStyle(Paint.Style.STROKE);
+        canvas.drawRect(reiniciarBoton, paint);
+        int y=getHeight() / 2-100;
+        int x= getWidth() / 2 - pausew / 2-90;
+        paint.setTextSize(50);
+        paint.setColor(Color.BLACK);
+        for (String line: texto.split("\n")) {
+            canvas.drawText(line, x, y, paint);
+            y += paint.descent() - paint.ascent();
+        }
 
+    }
     public void inicializarJuego(){
         cargarSonidos();
         inicalizarJugadores();
         inicializarBola();
+        iniciarBotonNuevoJuego();
         juegoIniciado=true;
+        continuar=true;
+        reiniciar=false;
     }
     public void inicializarBola(){
         bolaPincel = new Paint();
@@ -225,8 +287,11 @@ public class PongView extends View implements View.OnTouchListener{
 
         mPool.play(rid, 0.2f, 0.2f, 1, 0, 1.0f);
     }
+    //Liberar sonidos
+    public void release() {
+        mPool.release();
+    }
     public boolean onTouch(View view, MotionEvent motionEvent) {
-
 
         InputHandler handle = InputHandler.getInstance();
         for(int i = 0; i < handle.getTouchCount(motionEvent); i++) {
@@ -240,6 +305,12 @@ public class PongView extends View implements View.OnTouchListener{
                 jugadorRojo.destination = tx;
             }
 
+
+        }
+        if(reiniciar) {
+            reiniciar=false;
+            inicializarJuego();
+            resume();
         }
         return false;
     }

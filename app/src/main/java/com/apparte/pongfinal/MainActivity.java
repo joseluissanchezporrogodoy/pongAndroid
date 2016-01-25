@@ -12,4 +12,17 @@ public class MainActivity extends AppCompatActivity {
         mPongView = (PongView) findViewById(R.id.pong);
         mPongView.update();
     }
+    protected void onStop() {
+        super.onStop();
+        mPongView.stop();
+    }
+
+    protected void onResume() {
+        super.onResume();
+        mPongView.resume();
+    }
+    protected void onDestroy() {
+        super.onDestroy();
+        mPongView.release();
+    }
 }

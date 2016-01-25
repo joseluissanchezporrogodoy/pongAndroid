@@ -124,7 +124,7 @@ public class Player {
     }
     ///Saber si sigue vivo
     public boolean haGanado() {
-        return mGoles == 3;
+        return mGoles == 1;
     }
 
 }
