@@ -1,4 +1,4 @@
-package com.apparte.pongfinal;
+package com.apparte.pongfinal.Game;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -12,6 +12,8 @@ import android.os.Message;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+
+import com.apparte.pongfinal.R;
 
 /**
  * Created by jlsanchez on 25/1/16.
@@ -28,6 +30,7 @@ public class PongView extends View implements View.OnTouchListener{
     boolean continuar=true;
     private Rect reiniciarBoton;
     boolean reiniciar;
+    public  int numeroJugadores;
     /** Pool for our sound effects */
     protected SoundPool mPool = new SoundPool(3, AudioManager.STREAM_MUSIC, 0);
 
@@ -204,13 +207,15 @@ public class PongView extends View implements View.OnTouchListener{
         super.onDraw(canvas);
 
         //Pinto jugadores
-        if(continuar) {
-            jugadorzul.draw(canvas);
-            jugadorRojo.draw(canvas);
-            bola.draw(canvas);
-        }else{
+        if(null!=jugadorzul) {
+            if (continuar) {
+                jugadorzul.draw(canvas);
+                jugadorRojo.draw(canvas);
+                bola.draw(canvas);
+            } else {
 
-            pintaReiniciarJuego(canvas);
+                pintaReiniciarJuego(canvas);
+            }
         }
 
     }
@@ -227,7 +232,7 @@ public class PongView extends View implements View.OnTouchListener{
         String texto = "Juego terminado \n"+gana+"\n"+"Pulse para reiniciar";
         int pausew = (int) paint.measureText(texto);
         paint.setStyle(Paint.Style.STROKE);
-        canvas.drawRect(reiniciarBoton, paint);
+        //canvas.drawRect(reiniciarBoton, paint);
         int y=getHeight() / 2-100;
         int x= getWidth() / 2 - pausew / 2-90;
         paint.setTextSize(50);
@@ -297,15 +302,14 @@ public class PongView extends View implements View.OnTouchListener{
         for(int i = 0; i < handle.getTouchCount(motionEvent); i++) {
             int tx = (int) handle.getX(motionEvent, i);
             int ty = (int) handle.getY(motionEvent, i);
+            if(null!=jugadorzul) {
+                if (jugadorzul.inTouchbox(tx, ty)) {
+                    jugadorzul.destination = tx;
+                } else if (jugadorRojo.inTouchbox(tx, ty)) {
+                    jugadorRojo.destination = tx;
+                }
 
-            if( jugadorzul.inTouchbox(tx,ty)) {
-                jugadorzul.destination = tx;
             }
-            else if( jugadorRojo.inTouchbox(tx,ty)) {
-                jugadorRojo.destination = tx;
-            }
-
-
         }
         if(reiniciar) {
             reiniciar=false;

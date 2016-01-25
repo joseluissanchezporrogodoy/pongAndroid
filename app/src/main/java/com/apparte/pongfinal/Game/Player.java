@@ -1,10 +1,8 @@
-package com.apparte.pongfinal;
+package com.apparte.pongfinal.Game;
 
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.graphics.Typeface;
 
 /**
  * Created by jlsanchez on 25/1/16.

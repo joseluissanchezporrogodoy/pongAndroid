@@ -1,4 +1,4 @@
-package com.apparte.pongfinal;
+package com.apparte.pongfinal.Game;
 
 import android.os.Build;
 import android.view.MotionEvent;

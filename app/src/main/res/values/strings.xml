@@ -1,3 +1,16 @@
 <resources>
-    <string name="app_name">PongFinal</string>
+    <string name="app_name">Pong</string>
+    <string name="oneplayer">1 Jugador</string>
+    <string name="twoplayer">2 Jugadores</string>
+    <string name="settings">Configuración</string>
+    <string name="audio">Audio</string>
+    <string name="mute">Mute</string>
+    <string name="dificultad">Dificultad</string>
+    <string name="facil">Facil</string>
+    <string name="media">Media</string>
+    <string name="dificil">Dificil</string>
+    <string name="tipocontrol">Controlador</string>
+    <string name="touch">Touch</string>
+    <string name="sensor">Sensor</string>
+    <string name="ok">OK</string>
 </resources>

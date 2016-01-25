@@ -1,4 +1,4 @@
-package com.apparte.pongfinal;
+package com.apparte.pongfinal.Game;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
