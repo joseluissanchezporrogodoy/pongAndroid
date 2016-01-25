@@ -92,17 +92,17 @@ public class PongView extends View implements View.OnTouchListener{
         // Compruebo si ha perdido alguno
         if(bola.y >= getHeight()) {
             nuevaBola = true;
-            jugadorzul.loseLife();
+            jugadorRojo.marcaGol();
 
-            if(jugadorzul.living())
+            if(!jugadorRojo.haGanado())
                 playSound(bolaPerdidaSFX);
             else
                 playSound(ganarSFX);
         }
         else if (bola.y <= 0) {
             nuevaBola = true;
-            jugadorRojo.loseLife();
-            if(jugadorRojo.living())
+            jugadorzul.marcaGol();
+            if(!jugadorzul.haGanado())
                 playSound(bolaPerdidaSFX);
             else
                 playSound(ganarSFX);

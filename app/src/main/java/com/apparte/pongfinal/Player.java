@@ -1,8 +1,10 @@
 package com.apparte.pongfinal;
 
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 
 /**
  * Created by jlsanchez on 25/1/16.
@@ -15,7 +17,7 @@ public class Player {
     public static final int ALTO_PALA = 10;
     public static final int ANCHO_PALA= 70;
     protected int mSpeed = 10;
-    protected int mLives = 3;
+    protected int mGoles = 0;
     private int centroPantallaY;
     private int centroPantallaX;
     private int y;
@@ -80,6 +82,7 @@ public class Player {
         mPaint.setStyle(Paint.Style.FILL);
         canvas.drawRect(mRect, mPaint);
         drawTouchbox(canvas);
+        pintaGoles(canvas);
     }
     //Dibuja la zona de control
     public void drawTouchbox(Canvas canvas) {
@@ -99,16 +102,29 @@ public class Player {
         return mTouch.contains(x, y);
     }
 
-    ///Habrá que poner colisión
+   public void pintaGoles(Canvas canvas){
+       ////TEXTO
+       Paint paintFont = new Paint(Paint.ANTI_ALIAS_FLAG);
+//       Typeface typeFace = Typeface.createFromAsset(getContext().getAssets(), "font/VeraSeBd.ttf");
+//       paintFont.setTypeface(typeFace);
+       paintFont.setTextSize(60);
+       paintFont.setColor(mColor);
+       paintFont.setTextAlign(Paint.Align.CENTER);
+       if(y<centroPantallaY){
+           canvas.drawText("Goles:"+String.valueOf(mGoles), 100,50 , paintFont);
+       }else{
+           canvas.drawText("Goles:"+String.valueOf(mGoles), 100,(centroPantallaY*2)-5, paintFont);
+       }
 
+   }
 
     ////Pierde una vida (marcan un gol)
-    public void loseLife() {
-        mLives = Math.max(0, mLives - 1);
+    public void marcaGol() {
+        mGoles++;
     }
     ///Saber si sigue vivo
-    public boolean living() {
-        return mLives > 0;
+    public boolean haGanado() {
+        return mGoles == 3;
     }
 
 }
