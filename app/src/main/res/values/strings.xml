@@ -15,4 +15,5 @@
     <string name="ok">OK</string>
     <string name="cambiarfondo">Cambia el fondo</string>
     <string name="cancelar">Cancelar</string>
+    <string name="logo">log</string>
 </resources>
