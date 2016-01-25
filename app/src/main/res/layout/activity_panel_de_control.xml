@@ -33,4 +33,12 @@
         android:onClick="onClickConfiguration"
         android:text="@string/settings"
         android:layout_gravity="center" />
+
+    <Button
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="@string/cambiarfondo"
+        android:id="@+id/button"
+        android:layout_gravity="center_horizontal"
+        android:onClick="onClickTakePhoto"/>
 </LinearLayout>

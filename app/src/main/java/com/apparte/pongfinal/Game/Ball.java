@@ -11,7 +11,8 @@ import java.util.Random;
 public class Ball {
     public float x, y, xp, yp, vx, vy;
     private static final Random RNG = new Random();
-    public float velocidad =9.0f;
+    public static final float VELOCIDAD_BASE = 9.0f;
+    public float velocidad;
     protected double mAngle;
     private int anchoPantalla;
     private Paint mPaint;

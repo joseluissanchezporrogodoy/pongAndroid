@@ -30,7 +30,36 @@ public class PongView extends View implements View.OnTouchListener{
     boolean continuar=true;
     private Rect reiniciarBoton;
     boolean reiniciar;
+
+    ///Variable para controlar el sonido
+    public boolean mute;
+    public boolean isMute() {
+        return mute;
+    }
+    public void setMute(boolean mute) {
+        this.mute = mute;
+    }
+
+    ///Variable para seleccionar el numero de jugadores
     public  int numeroJugadores;
+    public int getNumeroJugadores() {
+        return numeroJugadores;
+    }
+    public void setNumeroJugadores(int numeroJugadores) {
+        this.numeroJugadores = numeroJugadores;
+    }
+    ///Variable para seleccionar la dificultad del juego
+    public int dificultad;
+    public int getDificultad() {
+        return dificultad;
+    }
+
+    public void setDificultad(int dificultad) {
+        this.dificultad = dificultad;
+    }
+
+
+
     /** Pool for our sound effects */
     protected SoundPool mPool = new SoundPool(3, AudioManager.STREAM_MUSIC, 0);
 
@@ -269,9 +298,10 @@ public class PongView extends View implements View.OnTouchListener{
         jugadorzul = new Player(Color.BLUE, blueTouch.top - 3 -Player.ALTO_PALA,getWidth()/2,getHeight()/2,jugadorRojoPincel);
         jugadorRojo.setTouchbox(redTouch);
         jugadorzul.setTouchbox(blueTouch);
-        //TODO
+
         ///Cambiar a solo un jugador//
-        //jugadorRojo.cambiarABarreraTotal();
+        if(numeroJugadores==1)
+            jugadorRojo.cambiarABarreraTotal();
 
 
     }
@@ -281,7 +311,7 @@ public class PongView extends View implements View.OnTouchListener{
     private void bolaInicio() {
         bola.x = getWidth() / 2;
         bola.y = getHeight() / 2;
-       // bola.velocidad = bola.velocidad ;//añadir velocidad
+        bola.velocidad = Ball.VELOCIDAD_BASE+(3*dificultad) ;//añadir velocidad
         bola.randomAngle();
         bola.pause();
 
@@ -289,8 +319,8 @@ public class PongView extends View implements View.OnTouchListener{
 
     //Reproducir Sonidos
     private void playSound(int rid) {
-
-        mPool.play(rid, 0.2f, 0.2f, 1, 0, 1.0f);
+        if(!mute)
+         mPool.play(rid, 0.2f, 0.2f, 1, 0, 1.0f);
     }
     //Liberar sonidos
     public void release() {

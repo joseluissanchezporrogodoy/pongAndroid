@@ -4,6 +4,7 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -12,27 +13,36 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.RadioGroup;
 
+import java.io.ByteArrayOutputStream;
+
 public class PanelDeControlActivity extends AppCompatActivity {
     Button button;
     DisplayMetrics metrics = new DisplayMetrics();
     boolean mute;
     int level;
     int tipoControl;
+    String uriStr;
     public static final String PLAYER = "player";
     public static final String MUTE = "mute";
     public static final String LEVEL = "level";
     public static final String TIPOCONTROL = "tipocontrol";
+    public static final String BITMAP = "bitmap";
+    private Bitmap mBitmap;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_panel_de_control);
+        setDefaultSettings();
 
 
+
+    }
+    void setDefaultSettings(){
         //Deaful settings
-        level =1;
+        level =0;
         tipoControl=0;
         mute=false;
-
+        uriStr=null;
 
     }
     public void animacionEntradaIzquierdaBaja(Button button){
@@ -62,13 +72,16 @@ public class PanelDeControlActivity extends AppCompatActivity {
         Intent i = new Intent(this, GameActivity.class);
         i.putExtra(PLAYER, 1);
         i.putExtra(MUTE, mute);
-        i.putExtra(LEVEL,level);
-        i.putExtra(TIPOCONTROL,tipoControl);
+        i.putExtra(LEVEL, level);
+        i.putExtra(TIPOCONTROL, tipoControl);
+        if(mBitmap!=null) {
+            ByteArrayOutputStream bs = new ByteArrayOutputStream();
+            mBitmap.compress(Bitmap.CompressFormat.PNG, 50, bs);
+            i.putExtra(BITMAP, bs.toByteArray());
+        }
         startActivity(i);
     }
     public void onClickConfiguration(View view) {
-
-
         final Dialog dialog = new Dialog(PanelDeControlActivity.this);
         dialog.setContentView(R.layout.custom_dialog);
         dialog.setTitle(getResources().getString(R.string.settings));
@@ -94,18 +107,29 @@ public class PanelDeControlActivity extends AppCompatActivity {
         dialog_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                    if(sonido.isChecked()){
-                        mute=true;
-                    }
+                if (sonido.isChecked()) {
+                    mute = true;
+                } else {
+                    mute = false;
+                }
                 dialog.dismiss();
             }
         });
         dialog.show();
     }
-    @Override
-    public void onResume() {
-        super.onResume();  // Always call the superclass method first
 
-     // animacionEntradaIzquierdaBaja(button);
+    public void onClickTakePhoto(View view){
+        DialogImage.selectImage(PanelDeControlActivity.this, PanelDeControlActivity.this);
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            if (requestCode == DialogImage.REQUEST_CAMERA) {
+                mBitmap = (Bitmap) data.getExtras().get("data");
+
+            }
+        }
+
     }
 }
