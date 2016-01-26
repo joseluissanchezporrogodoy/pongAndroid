@@ -20,7 +20,8 @@ public class Player {
     private int centroPantallaX;
     private int y;
     public int destination;
-
+    public boolean onePlayer;
+    protected int toques=0;
     public Player(int color, int y,int centroPantallaX,int centroPantallaY,Paint paint) {
         mColor = color;
         this.centroPantallaY=centroPantallaY;
@@ -103,8 +104,6 @@ public class Player {
    public void pintaGoles(Canvas canvas){
        ////TEXTO
        Paint paintFont = new Paint(Paint.ANTI_ALIAS_FLAG);
-//       Typeface typeFace = Typeface.createFromAsset(getContext().getAssets(), "font/VeraSeBd.ttf");
-//       paintFont.setTypeface(typeFace);
        paintFont.setTextSize(60);
        paintFont.setColor(mColor);
        paintFont.setTextAlign(Paint.Align.CENTER);
@@ -116,11 +115,16 @@ public class Player {
 
    }
 
+    ///Da un toque
+    public void tocaLaPelota(){
+        toques++;
+    }
     ////Pierde una vida (marcan un gol)
     public void marcaGol() {
         mGoles++;
     }
-    ///Saber si sigue vivo
+    ///Saber si ha ganado
+    ///Aumentar para que el partido dure más
     public boolean haGanado() {
         return mGoles == 1;
     }

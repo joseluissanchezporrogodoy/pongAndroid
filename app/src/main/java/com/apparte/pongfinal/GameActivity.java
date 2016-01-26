@@ -31,7 +31,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     Bitmap bitmap;
     private SensorManager sensorManager;
     private Sensor sensor;
-
+    private boolean sensorActivo;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,16 +48,16 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
                     i.getByteArrayExtra(PanelDeControlActivity.BITMAP),0,i.getByteArrayExtra(PanelDeControlActivity.BITMAP).length);
             fondo.setBackgroundDrawable(new BitmapDrawable(bitmap));
         }
-        if(false)
+        if(b.getInt(PanelDeControlActivity.TIPOCONTROL)==0) {
             mPongView.update();
-
-        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        sensor = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
-        //Si el sensor no está disponible lo indico
-        if(sensor == null){
+            sensorActivo = false;
+        }else {
+            sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
             sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-            if(sensor==null){
-                AlertDialog.Builder builder = new  AlertDialog.Builder(this);
+            sensorActivo =true;
+            if (sensor == null) {
+                sensorActivo=false;
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setMessage("El sensor no esta disponible en este dispositivo")
                         .setTitle("¡Atención!")
                         .setCancelable(false)
@@ -71,27 +71,19 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
                 AlertDialog alertDialog = builder.create();
                 alertDialog.show();
             }
-
-
         }
+
+
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         // Elimino el listener para el sensor
+        if(sensorActivo)
         sensorManager.unregisterListener(this);
     }
-    private String getRealPathFromURI(Uri contentURI) {
-        Cursor cursor = getContentResolver().query(contentURI, null, null, null, null);
-        if (cursor == null) { // Source is Dropbox or other similar local file path
-            return contentURI.getPath();
-        } else {
-            cursor.moveToFirst();
-            int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
-            return cursor.getString(idx);
-        }
-    }
+
     protected void onStop() {
         super.onStop();
         mPongView.stop();
@@ -100,6 +92,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     protected void onResume() {
         super.onResume();
         mPongView.resume();
+        if(sensorActivo)
         sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_UI);
     }
     protected void onDestroy() {

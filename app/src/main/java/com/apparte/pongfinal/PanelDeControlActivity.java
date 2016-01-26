@@ -3,7 +3,9 @@ package com.apparte.pongfinal;
 import android.animation.AnimatorSet;
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -75,7 +77,7 @@ public class PanelDeControlActivity extends AppCompatActivity {
         jugador2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                onClickTwoPlayer();
             }
         });
         photo.startAnimation(animation);
@@ -108,7 +110,36 @@ public class PanelDeControlActivity extends AppCompatActivity {
         uriStr = null;
 
     }
+    public void onClickTwoPlayer() {
 
+        if(tipoControl==1){
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("El sensor no esta disponible en modo dos jugadores")
+                    .setTitle("¡Atención!")
+                    .setCancelable(false)
+                    .setNeutralButton("Aceptar",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    dialogInterface.cancel();
+                                }
+                            });
+            AlertDialog alertDialog = builder.create();
+            alertDialog.show();
+        }else {
+            Intent i = new Intent(this, GameActivity.class);
+            i.putExtra(PLAYER, 2);
+            i.putExtra(MUTE, mute);
+            i.putExtra(LEVEL, level);
+            i.putExtra(TIPOCONTROL, tipoControl);
+            if (mBitmap != null) {
+                ByteArrayOutputStream bs = new ByteArrayOutputStream();
+                mBitmap.compress(Bitmap.CompressFormat.PNG, 50, bs);
+                i.putExtra(BITMAP, bs.toByteArray());
+            }
+            startActivity(i);
+        }
+    }
 
 
     public void onClickOnePlayer() {
@@ -126,6 +157,7 @@ public class PanelDeControlActivity extends AppCompatActivity {
     }
 
     public void onClickConfiguration() {
+        setDefaultSettings();
         final Dialog dialog = new Dialog(PanelDeControlActivity.this);
         dialog.setContentView(R.layout.custom_dialog);
         dialog.setTitle(getResources().getString(R.string.settings));
