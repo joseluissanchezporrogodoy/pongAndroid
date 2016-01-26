@@ -8,7 +8,7 @@
         android:label="@string/app_name"
         android:screenOrientation="portrait"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@android:style/Theme.NoTitleBar">
         <uses-feature android:name="android.hardware.sensor.accelerometer" android:required="true" />
         <activity android:name=".Game.GameActivity"
             android:screenOrientation="portrait">

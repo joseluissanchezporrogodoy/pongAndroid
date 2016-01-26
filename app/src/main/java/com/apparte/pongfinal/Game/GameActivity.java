@@ -1,5 +1,6 @@
 package com.apparte.pongfinal.Game;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -30,7 +31,7 @@ import java.net.URISyntaxException;
 /**
  * Created by jlsanchez on 25/1/16.
  */
-public class GameActivity extends AppCompatActivity implements SensorEventListener {
+public class GameActivity extends Activity implements SensorEventListener {
     private PongView mPongView;
     Bitmap bitmap;
     private SensorManager sensorManager;

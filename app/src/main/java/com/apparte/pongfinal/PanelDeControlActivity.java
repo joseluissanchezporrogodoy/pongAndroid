@@ -2,6 +2,7 @@ package com.apparte.pongfinal;
 
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -24,7 +25,7 @@ import com.apparte.pongfinal.Game.GameActivity;
 
 import java.io.ByteArrayOutputStream;
 
-public class PanelDeControlActivity extends AppCompatActivity {
+public class PanelDeControlActivity extends Activity {
     Button jugador1;
     Button jugador2;
     Button configuracion;
