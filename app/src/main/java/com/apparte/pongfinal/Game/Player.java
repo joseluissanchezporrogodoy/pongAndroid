@@ -1,6 +1,7 @@
 package com.apparte.pongfinal.Game;
 
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 
@@ -22,13 +23,14 @@ public class Player {
     public int destination;
     public boolean onePlayer;
     protected int toques=0;
+    private int numeroDeVidas;
     public Player(int color, int y,int centroPantallaX,int centroPantallaY,Paint paint) {
         mColor = color;
         this.centroPantallaY=centroPantallaY;
         this.centroPantallaX=centroPantallaX;
         this.y=y;
         this.mPaint= paint;
-
+        numeroDeVidas =3;
        mRect = new Rect(centroPantallaX - ANCHO_PALA, y, centroPantallaX + ANCHO_PALA, y + ALTO_PALA);
 
 
@@ -103,14 +105,23 @@ public class Player {
 
    public void pintaGoles(Canvas canvas){
        ////TEXTO
-       Paint paintFont = new Paint(Paint.ANTI_ALIAS_FLAG);
-       paintFont.setTextSize(60);
-       paintFont.setColor(mColor);
-       paintFont.setTextAlign(Paint.Align.CENTER);
-       if(y<centroPantallaY){
-           canvas.drawText("Goles:"+String.valueOf(mGoles), 100,50 , paintFont);
-       }else{
-           canvas.drawText("Goles:"+String.valueOf(mGoles), 100,(centroPantallaY*2)-5, paintFont);
+       if(!onePlayer) {
+           Paint paintFont = new Paint(Paint.ANTI_ALIAS_FLAG);
+           paintFont.setTextSize(60);
+           paintFont.setColor(mColor);
+           paintFont.setTextAlign(Paint.Align.CENTER);
+           if (y < centroPantallaY) {
+               canvas.drawText("Goles:" + String.valueOf(mGoles), 100, 50, paintFont);
+           } else {
+               canvas.drawText("Goles:" + String.valueOf(mGoles), 100, (centroPantallaY * 2) - 5, paintFont);
+           }
+       }else if (mColor == Color.BLUE){
+           Paint paintFont = new Paint(Paint.ANTI_ALIAS_FLAG);
+           paintFont.setTextSize(60);
+           paintFont.setColor(mColor);
+           paintFont.setTextAlign(Paint.Align.CENTER);
+           canvas.drawText("Toques:" + String.valueOf(toques), 150, (centroPantallaY * 2) - 15, paintFont);
+
        }
 
    }
@@ -126,7 +137,7 @@ public class Player {
     ///Saber si ha ganado
     ///Aumentar para que el partido dure más
     public boolean haGanado() {
-        return mGoles == 1;
+        return mGoles == 3;
     }
 
 }

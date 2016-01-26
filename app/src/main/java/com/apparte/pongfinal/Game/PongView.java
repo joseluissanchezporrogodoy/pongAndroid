@@ -20,7 +20,7 @@ import com.apparte.pongfinal.R;
  */
 public class PongView extends View implements View.OnTouchListener{
     private boolean juegoIniciado=false;
-    Player jugadorzul;
+    Player jugadorAzul;
     Player jugadorRojo;
     Paint jugadorAzulPincel;
     Paint jugadorRojoPincel;
@@ -150,7 +150,7 @@ public class PongView extends View implements View.OnTouchListener{
         float px = bola.x;
         float py = bola.y;
         bola.move();
-        jugadorzul.move();
+        jugadorAzul.move();
         jugadorRojo.move();
         handleBounces(px, py);
         // Compruebo si ha perdido alguno
@@ -170,8 +170,8 @@ public class PongView extends View implements View.OnTouchListener{
         }
         else if (bola.y <= 0) {
             nuevaBola = true;
-            jugadorzul.marcaGol();
-            if(!jugadorzul.haGanado())
+            jugadorAzul.marcaGol();
+            if(!jugadorAzul.haGanado())
                 playSound(bolaPerdidaSFX);
             else{
                 playSound(ganarSFX);
@@ -185,7 +185,7 @@ public class PongView extends View implements View.OnTouchListener{
     }
     protected void handleBounces(float px, float py) {
         handleTopFastBounce(jugadorRojo, px, py);
-        handleBottomFastBounce(jugadorzul, px, py);
+        handleBottomFastBounce(jugadorAzul, px, py);
 
 
         if(bola.x <= Ball.RADIO || bola.x >= getWidth() - Ball.RADIO) {
@@ -240,6 +240,8 @@ public class PongView extends View implements View.OnTouchListener{
             bola.y = jugador.getTop() - Ball.RADIO;
             bola.rebotaEnPlayer(jugador);
             playSound(toqueRaquetaSFX);
+            if(jugadorAzul.onePlayer)
+                jugadorAzul.tocaLaPelota();
 
         }
     }
@@ -248,9 +250,9 @@ public class PongView extends View implements View.OnTouchListener{
         super.onDraw(canvas);
 
         //Pinto jugadores
-        if(null!=jugadorzul) {
+        if(null!= jugadorAzul) {
             if (continuar) {
-                jugadorzul.draw(canvas);
+                jugadorAzul.draw(canvas);
                 jugadorRojo.draw(canvas);
                 bola.draw(canvas);
             } else {
@@ -265,7 +267,7 @@ public class PongView extends View implements View.OnTouchListener{
         Paint paint= new Paint();
         paint.setColor(Color.GREEN);
         String gana;
-        if(jugadorzul.haGanado()){
+        if(jugadorAzul.haGanado()){
             gana ="Gana el azul";
         }else{
             gana ="Gana el rojo";
@@ -307,13 +309,20 @@ public class PongView extends View implements View.OnTouchListener{
         jugadorRojoPincel = new Paint();
         jugadorRojoPincel.setColor(Color.GREEN);
         jugadorRojo = new Player(Color.RED, redTouch.bottom + 3,getWidth()/2,getHeight()/2,jugadorAzulPincel);
-        jugadorzul = new Player(Color.BLUE, blueTouch.top - 3 -Player.ALTO_PALA,getWidth()/2,getHeight()/2,jugadorRojoPincel);
+        jugadorAzul = new Player(Color.BLUE, blueTouch.top - 3 -Player.ALTO_PALA,getWidth()/2,getHeight()/2,jugadorRojoPincel);
         jugadorRojo.setTouchbox(redTouch);
-        jugadorzul.setTouchbox(blueTouch);
+        jugadorAzul.setTouchbox(blueTouch);
 
         ///Cambiar a solo un jugador//
-        if(numeroJugadores==1)
+        if(numeroJugadores==1){
             jugadorRojo.cambiarABarreraTotal();
+            jugadorAzul.onePlayer=true;
+            jugadorRojo.onePlayer=true;
+        }else {
+            jugadorAzul.onePlayer=false;
+            jugadorRojo.onePlayer=false;
+        }
+
 
 
     }
@@ -344,9 +353,9 @@ public class PongView extends View implements View.OnTouchListener{
         for(int i = 0; i < handle.getTouchCount(motionEvent); i++) {
             int tx = (int) handle.getX(motionEvent, i);
             int ty = (int) handle.getY(motionEvent, i);
-            if(null!=jugadorzul) {
-                if (jugadorzul.inTouchbox(tx, ty)) {
-                    jugadorzul.destination = tx;
+            if(null!= jugadorAzul) {
+                if (jugadorAzul.inTouchbox(tx, ty)) {
+                    jugadorAzul.destination = tx;
                 } else if (jugadorRojo.inTouchbox(tx, ty)) {
                     jugadorRojo.destination = tx;
                 }
@@ -368,9 +377,9 @@ public class PongView extends View implements View.OnTouchListener{
             return;
         }
         if(gravityX>0){
-            jugadorzul.destination=0;
+            jugadorAzul.destination=0;
         }else{
-            jugadorzul.destination=getWidth();
+            jugadorAzul.destination=getWidth();
         }
     }
 
