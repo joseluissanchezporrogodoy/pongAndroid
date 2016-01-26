@@ -30,7 +30,19 @@ public class PongView extends View implements View.OnTouchListener{
     boolean continuar=true;
     private Rect reiniciarBoton;
     boolean reiniciar;
+/////
+    // Ultimo momento en el que se actualizó
+// Factor de conversión de metros a píxeles
+    final float METER_TO_PIXEL = 50.0f;
+    long lastUpdateTime = 0;
+    // Posición  del jugador
+    float radius = 0;
+    float posX = 0;
+    float posY =0;
 
+    // Velocidad de la bola
+    float speedX = 0;
+    float speedY = 0;
     ///Variable para controlar el sonido
     public boolean mute;
     public boolean isMute() {
@@ -348,4 +360,18 @@ public class PongView extends View implements View.OnTouchListener{
         }
         return false;
     }
+    public void updateFromSensor(float gravityX, float gravityY) {
+        // Primera vez
+        if (lastUpdateTime == 0) {
+            lastUpdateTime = System.currentTimeMillis();
+
+            return;
+        }
+        if(gravityX>0){
+            jugadorzul.destination=0;
+        }else{
+            jugadorzul.destination=getWidth();
+        }
+    }
+
 }

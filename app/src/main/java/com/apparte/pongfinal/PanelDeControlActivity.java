@@ -112,7 +112,6 @@ public class PanelDeControlActivity extends AppCompatActivity {
 
 
     public void onClickOnePlayer() {
-
         Intent i = new Intent(this, GameActivity.class);
         i.putExtra(PLAYER, 1);
         i.putExtra(MUTE, mute);
@@ -124,8 +123,6 @@ public class PanelDeControlActivity extends AppCompatActivity {
             i.putExtra(BITMAP, bs.toByteArray());
         }
         startActivity(i);
-
-
     }
 
     public void onClickConfiguration() {
