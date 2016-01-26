@@ -9,7 +9,7 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="70dp"
         android:layout_gravity="right"
         android:paddingLeft="10dp"
         android:id="@+id/camara">
@@ -18,7 +18,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/imageView"
-            android:src="@android:drawable/ic_menu_camera"/>
+            android:src="@android:drawable/ic_menu_camera"
+            android:layout_gravity="center_vertical" />
 
         <TextView
             android:layout_width="match_parent"
@@ -26,7 +27,8 @@
             android:text="Foto desde cámara."
             android:id="@+id/textView"
             android:textSize="15sp"
-            android:gravity="center_vertical" />
+            android:gravity="center_vertical"
+            android:layout_marginLeft="7dp" />
     </LinearLayout>
 
     <LinearLayout

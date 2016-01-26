@@ -7,6 +7,7 @@ import java.util.Random;
 
 /**
  * Created by jlsanchez on 25/1/16.
+ * Clase que representa la bola
  */
 public class Ball {
     public float x, y, xp, yp, vx, vy;

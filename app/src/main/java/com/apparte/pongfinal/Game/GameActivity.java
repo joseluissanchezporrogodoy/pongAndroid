@@ -1,4 +1,4 @@
-package com.apparte.pongfinal;
+package com.apparte.pongfinal.Game;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -21,11 +21,15 @@ import android.util.Log;
 import android.widget.RelativeLayout;
 
 import com.apparte.pongfinal.Game.PongView;
+import com.apparte.pongfinal.PanelDeControlActivity;
+import com.apparte.pongfinal.R;
 
 import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
-
+/**
+ * Created by jlsanchez on 25/1/16.
+ */
 public class GameActivity extends AppCompatActivity implements SensorEventListener {
     private PongView mPongView;
     Bitmap bitmap;
@@ -43,11 +47,13 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         mPongView.setNumeroJugadores(b.getInt(PanelDeControlActivity.PLAYER));
         mPongView.setDificultad(b.getInt(PanelDeControlActivity.LEVEL));
         mPongView.setMute(b.getBoolean(PanelDeControlActivity.MUTE));
+        //Compruebo qu eel jugador ha configurado un fondo y lo casco
         if(i.hasExtra(PanelDeControlActivity.BITMAP)) {
              bitmap = BitmapFactory.decodeByteArray(
                     i.getByteArrayExtra(PanelDeControlActivity.BITMAP),0,i.getByteArrayExtra(PanelDeControlActivity.BITMAP).length);
             fondo.setBackgroundDrawable(new BitmapDrawable(bitmap));
         }
+        //Miro el tipo de control e intento cargarlo si no puedo con el sensor vuelvo al touch
         if(b.getInt(PanelDeControlActivity.TIPOCONTROL)==0) {
             mPongView.update();
             sensorActivo = false;
@@ -66,6 +72,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {
                                         dialogInterface.cancel();
+                                        comienza();
                                     }
                                 });
                 AlertDialog alertDialog = builder.create();
@@ -75,7 +82,9 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
 
 
     }
-
+    private void comienza(){
+        mPongView.update();
+    }
     @Override
     protected void onPause() {
         super.onPause();
@@ -86,22 +95,26 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
 
     protected void onStop() {
         super.onStop();
+        //Paro el juego
         mPongView.stop();
     }
 
     protected void onResume() {
         super.onResume();
         mPongView.resume();
+        //registro el listener del sensor
         if(sensorActivo)
         sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_UI);
     }
     protected void onDestroy() {
         super.onDestroy();
+        //Libero recursos del juego
         mPongView.release();
     }
 
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
+        //Envío los datos del sensor
         mPongView.updateFromSensor(sensorEvent.values[0], sensorEvent.values[1]);
         Log.i("Cambio posición x:", String.valueOf(sensorEvent.values[1]));
     }

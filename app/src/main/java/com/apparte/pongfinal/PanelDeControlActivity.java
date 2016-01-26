@@ -1,6 +1,5 @@
 package com.apparte.pongfinal;
 
-import android.animation.AnimatorSet;
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.app.AlertDialog;
@@ -8,8 +7,6 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.net.Uri;
-import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -23,8 +20,9 @@ import android.widget.ImageView;
 import android.widget.RadioGroup;
 
 
+import com.apparte.pongfinal.Game.GameActivity;
+
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 
 public class PanelDeControlActivity extends AppCompatActivity {
     Button jugador1;
@@ -56,6 +54,7 @@ public class PanelDeControlActivity extends AppCompatActivity {
         configuracion = (Button) findViewById(R.id.sonido);
         photo = (Button) findViewById(R.id.button);
         logo = (ImageView) findViewById(R.id.logoImagen);
+        //Animación para que los botones vengan desde la izquierda y reboten (no conseguí que hicieran una salida hacia la derecha al salir de la pantalla ;()
         Animation animation = AnimationUtils.loadAnimation(this, android.R.anim.slide_in_left);
         animation.setInterpolator(new BounceInterpolator());
         animation.setDuration(4000);
@@ -93,6 +92,7 @@ public class PanelDeControlActivity extends AppCompatActivity {
 
     }
 
+    //Animación del fondo de pantalla al iniciar
     private void iniciarAnimacionPropiedades() {
         ObjectAnimator backgroundColorAnimator = ObjectAnimator.ofObject(
                 findViewById(R.id.ll_container), "backgroundColor", new ArgbEvaluator(), 0xff000000,
@@ -101,7 +101,7 @@ public class PanelDeControlActivity extends AppCompatActivity {
         backgroundColorAnimator.setRepeatCount(1);
         backgroundColorAnimator.start();
     }
-
+    //OPCIONES POR DEFECTO
     void setDefaultSettings() {
         //Deaful settings
         level = 0;
@@ -110,9 +110,11 @@ public class PanelDeControlActivity extends AppCompatActivity {
         uriStr = null;
 
     }
+    ///LLamamos a la activity del juego pasándole opciones; en este caso comprobamos también que no haya configurado sensor pues en este caso no se permite
+    // lo dejamos para la versión 2.0 ;)
     public void onClickTwoPlayer() {
 
-        if(tipoControl==1){
+        if (tipoControl == 1) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage("El sensor no esta disponible en modo dos jugadores")
                     .setTitle("¡Atención!")
@@ -126,7 +128,7 @@ public class PanelDeControlActivity extends AppCompatActivity {
                             });
             AlertDialog alertDialog = builder.create();
             alertDialog.show();
-        }else {
+        } else {
             Intent i = new Intent(this, GameActivity.class);
             i.putExtra(PLAYER, 2);
             i.putExtra(MUTE, mute);
@@ -141,7 +143,7 @@ public class PanelDeControlActivity extends AppCompatActivity {
         }
     }
 
-
+    ///LLamamos a la activity del juego pasándole opciones
     public void onClickOnePlayer() {
         Intent i = new Intent(this, GameActivity.class);
         i.putExtra(PLAYER, 1);
@@ -156,6 +158,7 @@ public class PanelDeControlActivity extends AppCompatActivity {
         startActivity(i);
     }
 
+    //Abrimos cuadro de diálogo y recibimos la configuración
     public void onClickConfiguration() {
         setDefaultSettings();
         final Dialog dialog = new Dialog(PanelDeControlActivity.this);
@@ -192,11 +195,12 @@ public class PanelDeControlActivity extends AppCompatActivity {
         });
         dialog.show();
     }
-
+    //Abrimos el cuadro de dialogo para seleccionar la cámara
     public void onClickTakePhoto() {
         DialogImage.selectImage(PanelDeControlActivity.this, PanelDeControlActivity.this);
     }
 
+    ////Recibimos el resultado de realizar la foto con la cámara
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

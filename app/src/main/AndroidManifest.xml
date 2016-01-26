@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <uses-feature android:name="android.hardware.sensor.accelerometer" android:required="true" />
-        <activity android:name=".GameActivity"
+        <activity android:name=".Game.GameActivity"
             android:screenOrientation="portrait">
 
         </activity>

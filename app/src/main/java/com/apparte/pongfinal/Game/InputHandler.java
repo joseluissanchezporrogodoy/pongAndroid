@@ -3,6 +3,10 @@ package com.apparte.pongfinal.Game;
 import android.os.Build;
 import android.view.MotionEvent;
 
+/**
+ * Created by jlsanchez on 25/1/16.
+ * Con esta clase intento hacer multitouch el juego ; es una clase abstracta
+ */
 public abstract class InputHandler {
 	
 	public static InputHandler getInstance() {
